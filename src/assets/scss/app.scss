@@ -1,0 +1,441 @@
+@charset 'utf-8';
+
+@import 'settings';
+@import 'foundation';
+@import 'motion-ui';
+
+@include foundation-global-styles;
+@include foundation-grid;
+@include foundation-flex-grid;
+@include foundation-typography;
+@include foundation-button;
+@include foundation-forms;
+// @include foundation-range-input;
+//@include foundation-accordion;
+//@include foundation-accordion-menu;
+//@include foundation-badge;
+//@include foundation-breadcrumbs;
+@include foundation-button-group;
+//@include foundation-callout;
+//@include foundation-card;
+//@include foundation-close-button;
+@include foundation-menu;
+@include foundation-menu-icon;
+//@include foundation-drilldown-menu;
+//@include foundation-dropdown;
+//@include foundation-dropdown-menu;
+@include foundation-responsive-embed;
+//@include foundation-label;
+//@include foundation-media-object;
+//@include foundation-off-canvas;
+//@include foundation-orbit;
+//@include foundation-pagination;
+//@include foundation-progress-bar;
+// @include foundation-progress-element;
+// @include foundation-meter-element;
+//@include foundation-slider;
+@include foundation-sticky;
+//@include foundation-reveal;
+//@include foundation-switch;
+@include foundation-table;
+//@include foundation-tabs;
+@include foundation-thumbnail;
+@include foundation-title-bar;
+@include foundation-tooltip;
+@include foundation-top-bar;
+@include foundation-visibility-classes;
+@include foundation-float-classes;
+@include foundation-flex-classes;
+
+@include motion-ui-transitions;
+@include motion-ui-animations;
+
+
+
+/* Functions */
+/// Test if `$value` is a valid direction
+/// @param {*} $value - Value to test
+/// @return {Bool}
+@function is-direction($value) {
+  $is-keyword: index((to top, to top right, to right top, to right, to bottom right, to right bottom, to bottom, to bottom left, to left bottom, to left, to left top, to top left), $value);
+  $is-angle: type-of($value) == 'number' and index('deg' 'grad' 'turn' 'rad', unit($value));
+
+  @return $is-keyword or $is-angle;
+}
+
+/// Convert a direction to legacy syntax
+/// @param {Keyword | Angle} $value - Value to convert
+/// @require {function} is-direction
+/// @require {function} convert-angle
+/// @throw Cannot convert `#{$value}` to legacy syntax because it doesn't seem to be a direction.;
+@function legacy-direction($value) {
+  @if is-direction($value) == false {
+    @error "Cannot convert `#{$value}` to legacy syntax because it doesn't seem to be a direction.";
+  }
+
+  $conversion-map: (
+    to top          : bottom,
+    to top right    : bottom left,
+    to right top    : left bottom,
+    to right        : left,
+    to bottom right : top left,
+    to right bottom : left top,
+    to bottom       : top,
+    to bottom left  : top right,
+    to left bottom  : right top,
+    to left         : right,
+    to left top     : right bottom,
+    to top left     : bottom right
+  );
+
+  @if map-has-key($conversion-map, $value) {
+    @return map-get($conversion-map, $value);
+  }
+
+  @return 90deg - $value;
+}
+/* //Functions */
+
+/* Local mixins */
+@mixin linear-gradient($direction, $color-stops...) {
+  // Direction has been omitted and happens to be a color-stop
+  @if is-direction($direction) == false {
+    $color-stops: $direction, $color-stops;
+    $direction: 180deg;
+  }
+  background: nth(nth($color-stops, 1), 1);
+  background: -webkit-linear-gradient(legacy-direction($direction), $color-stops);
+  background: linear-gradient($direction, $color-stops);
+}
+/* //Local mixins */
+
+/* Foundation overrides */
+.row.expanded {
+  .columns {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+[type='text'],
+[type='email'],
+[type='number'],
+textarea {
+  padding: 1rem;
+  height: auto;
+  @include breakpoint(small) {
+    min-width: inherit;
+  }
+  @include breakpoint(medium) {
+    min-width: 300px;
+  }
+
+}
+/* --- */
+
+/* Common styles */
+::-moz-selection { background: #069c95; color: $white; }
+::selection { background: #069c95; color: $white; }
+
+.hline-separator {
+  width: rem-calc(130);
+  border: none;
+  background-color: #8d8d8d;
+  height: 1px;
+  margin: rem-calc(14) auto rem-calc(20);
+}
+/* --- */
+
+
+
+section {
+  padding: rem-calc(60 0);
+  @include breakpoint(medium down) {
+    padding: rem-calc(30 0);
+  }
+}
+.planex-logo {
+  margin-left: rem-calc(35);
+}
+.white {
+  color: $white;
+}
+.number {
+  font-size: rem-calc(60);
+  display: block;
+  @include breakpoint(medium down) {
+    font-size: rem-calc(42);
+  }
+}
+.numbers {
+  padding: rem-calc(60 0 50);
+  @include breakpoint(medium down) {
+    padding: rem-calc(50 0 20);
+  }
+  .column {
+    @include breakpoint(medium down) {
+      margin-bottom: rem-calc(35);
+    }
+    .text {
+      // padding-left: rem-calc(20);
+      // padding-right: rem-calc(20);
+      // @include breakpoint(medium down) {
+      //   padding-left: 0;
+      //   padding-right: 0;
+      // }
+    }
+  }
+}
+.radio-buttons {
+  margin-top: rem-calc(15);
+  text-align: center;
+}
+.action {
+  margin: rem-calc(20 0);
+  .button.rounded {
+    padding: rem-calc(20);
+  }
+}
+button.menu-icon {
+  margin-top: rem-calc(20);
+}
+.button {
+  &.rounded {
+    border-radius: rem-calc(38);
+    padding: rem-calc(28);
+    @include breakpoint(medium down) {
+      padding: rem-calc(18 10);
+      white-space: normal;
+    }
+  }
+}
+a.white {
+  color: $white;
+  &:hover {
+    color: scale-color($white, $lightness: -14%);
+  }
+}
+.brand {
+  padding: rem-calc(15 0 15 25);
+  display: inline-block;
+  svg,
+  .svg {
+    //width: 75%;
+    //height: 75%;
+  }
+  @include breakpoint(medium down) {
+    padding: rem-calc(15 0 15 10);
+    svg,
+    .svg {
+      width: 75%;
+      height: 75%;
+    }
+  }
+}
+.hero {
+  background-image: url(../img/hero-bg.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 80vh;
+  color: $white;
+  .button {
+    margin-top: rem-calc(40);
+    font-weight: 700;
+    &:hover {
+      //color: scale-color($dark-gray, $lightness: -44%);
+      background-color: scale-color($primary-color, $lightness: 14%);
+    }
+  }
+}
+.gradient {
+  @include linear-gradient(to right, #0c9c7f 40%, #2cc064 80%);
+}
+.contact-form {
+  @include breakpoint(medium up) {
+    padding: 1rem;
+  }
+}
+.services {
+  hr {
+    margin-left: 0;
+  }
+  .column {
+    margin-top: rem-calc(45);
+    margin-bottom: rem-calc(15);
+    @include breakpoint(medium down) {
+      margin-top: rem-calc(25);
+      margin-bottom: rem-calc(5);
+      padding-left: rem-calc(25);
+      padding-right: rem-calc(25);
+      &>* {
+        margin-left: auto;
+        margin-right: auto;
+      }
+      &>p {
+        text-align: center;
+      }
+    }
+  }
+  .service-content {
+    padding-right: rem-calc(60);
+    @include breakpoint(medium down) {
+      padding-right: 0;
+      text-align: center;
+    }
+  }
+}
+.why-us {
+  background-color: #0f975f;
+  background-image: url(../img/why-us.jpg);
+  background-repeat: no-repeat;
+  color: $white;
+  @include breakpoint(small) {
+    background-position: left center;
+  }
+  @include breakpoint(medium) {
+    background-position: right center;
+  }
+  ul {
+    font-size: rem-calc(24);
+    @include breakpoint(medium down) {
+      font-size: inherit;
+    }
+  }
+}
+.contacts {
+  .addresses {
+    @include breakpoint(small) {
+      margin-top: rem-calc(30);
+      margin-bottom: rem-calc(40);
+      padding-left: 18%;
+    }
+    @include breakpoint(medium) {
+      margin-top: rem-calc(60);
+      margin-bottom: rem-calc(80);
+      padding-left: 0;
+    }
+    &>div {
+      border-right: 1px solid $medium-gray;
+      padding-left: 7%;
+      @include breakpoint(medium down) {
+        padding-left: rem-calc(15);
+      }
+      &:last-child {
+        border: none;
+      }
+      .city {
+        margin-bottom: rem-calc(15);
+        display: block;
+      }
+    }
+  }
+}
+footer {
+  padding: rem-calc(40 0 60);
+  background-color: #ebebeb;
+  text-aligh: center;
+  .link {
+    @include breakpoint(small) {
+      margin-bottom: rem-calc(25);
+    }
+    @include breakpoint(medium) {
+      margin-bottom: 0;
+    }
+  }
+}
+.owl-carousel {
+  @include breakpoint(small) {
+    margin: rem-calc(25 0 50);
+    font-size: rem-calc(18);
+  }
+  @include breakpoint(medium) {
+    margin: rem-calc(50 0 100);
+    font-size: rem-calc(24);
+  }
+  .item-info {
+    @include breakpoint(small) {
+      margin-bottom: rem-calc(20);
+    }
+    @include breakpoint(medium) {
+      margin-bottom: rem-calc(35);
+    }
+    .title {
+      display: block;
+    }
+    .add-info {
+      display: block;
+      color: #6c6c6c;
+    }
+  }
+  &#left, &#right {
+    cursor: pointer;
+    .item-info {
+      @include breakpoint(medium) {
+        display: none;
+      }
+    }
+  }
+  &#left {
+    -ms-transform: matrix(0.65, 0, 0, 0.65, 20, 100); /* IE 9 */
+    -webkit-transform: matrix(0.65, 0, 0, 0.65, 20, 100); /* Safari */
+    transform: matrix(0.65, 0, 0, 0.65, 20, 100);
+    //transform: matrix3d(100, 0, 1, 0.1, 0, 100, 1, 0, 1, 1, 1, 1, 1, 0, 0, 150);
+  }
+  &#right {
+    -ms-transform: matrix(0.65, 0, 0, 0.65, -20, 100); /* IE 9 */
+    -webkit-transform: matrix(0.65, 0, 0, 0.65, -20, 100); /* Safari */
+    transform: matrix(0.65, 0, 0, 0.65, -20, 100);
+  }
+  .owl-nav {
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    &>div {
+      position: absolute;
+    }
+    .owl-prev {
+      left: -40px;
+    }
+    .owl-next {
+      right: -40px;
+    }
+  }
+  .owl-dots {
+    padding-top: 10px;
+    .owl-dot {
+      display: inline-block;
+      margin-right: 10px;
+      &:last-child {
+        margin-right: 0;
+      }
+      span {
+        border: 1px solid #ddd;
+        background-color: #fff;
+        width: 16px;
+        height: 16px;
+        border-radius: 8px;
+        display: block;
+        -webkit-transition: all 0.4s;
+        transition: all 0.4s;
+      }
+      &:hover {
+        span {
+          border-color: #666;
+          background-color: #eee;
+        }
+      }
+      &.active {
+        span {
+          border-color: #09bb82;
+          background-color: #09bb82;
+        }
+        &:hover {
+          span {
+            border-color: #09bb82;
+            background-color: #09bb82;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{{!-- This is the base layout for your project, and will be used on every page. --}}
+
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLHome - професионално управление на сгради</title>
+    <link rel="stylesheet" href="{{root}}assets/css/app.css">
+    <link rel="stylesheet" href="{{root}}assets/fancybox/jquery.fancybox.css">
+    <link rel="stylesheet" href="{{root}}assets/owl.carousel.min.css">
+    {{!--<link rel="stylesheet" href="{{root}}assets/owl.theme.default.min.css">--}}
+  </head>
+  <body>
+
+    {{!-- Pages you create in the src/pages/ folder are inserted here when the flattened page is created. --}}
+    {{> body}}
+
+    <script src="{{root}}assets/js/app.js"></script>
+    <script src="{{root}}assets/validate/jquery.validate.min.js"></script>
+    <script src="{{root}}assets/fancybox/jquery.fancybox.pack.js"></script>
+    <script src="{{root}}assets/fancybox/fancybox_init.js"></script>
+    <script src="{{root}}assets/jquery.form.js"></script>
+    <script src="{{root}}assets/scripts.js"></script>
+  </body>
+</html>
